@@ -1,0 +1,55 @@
+#!/bin/bash
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+clear
+echo
+echo "#############################################################"
+echo "# Shadowsocks Python Manyuser For Debian/Ubuntu/Centos      #"
+echo "# Author: JulySnow <603723963@qq.com>                       #"
+echo "# Thanks: @zd423 <zdfans.com> @glzhaojin <zhaoj.in>         #"
+echo "#############################################################"
+echo
+
+arg1=$1
+
+start_shadowsocks()
+{
+supervisorctl reload
+supervisorctl start all
+}
+
+stop_shadowsocks()
+{
+supervisorctl reload
+supervisorctl stop all
+}
+
+restart_shadowsocks()
+{
+supervisorctl reload
+supervisorctl restart all
+}
+
+showlog__shadowsocks()
+{
+supervisorctl tail -f shadowsocks stderr
+}
+
+case "${arg1}" in
+    start)
+        start_shadowsocks
+        ;;
+    stop)
+        stop_shadowsocks
+        ;;
+    restart)
+        restart_shadowsocks
+        ;;
+    showlog)
+        showlog__shadowsocks
+        ;;
+    *)
+        echo "Usage: shadowsocks {start|stop|showlog|restart}"
+esac
+exit
