@@ -13,27 +13,73 @@ echo
 
 arg1=$1
 
+Get_Dist_Name()
+{
+    if grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
+        DISTRO='CentOS'
+        PM='yum'
+    elif grep -Eqi "Debian" /etc/issue || grep -Eq "Debian" /etc/*-release; then
+        DISTRO='Debian'
+        PM='apt'
+    elif grep -Eqi "Ubuntu" /etc/issue || grep -Eq "Ubuntu" /etc/*-release; then
+        DISTRO='Ubuntu'
+        PM='apt'		
+	else
+        DISTRO='unknow'
+    fi
+}
+
+Get_Dist_Name
+
 start_shadowsocks()
 {
-supervisorctl reload
-supervisorctl start all
+if [ "$DISTRO" == "CentOS" ]; then
+	# CentOS
+	/etc/init.d/supervisord stop
+	fi
+	if [[ "$DISTRO" == "Ubuntu" ]] || [[ "$DISTRO" == "Debian" ]]; then
+	# Debian/Ubuntu
+	supervisorctl reload
+	supervisorctl start all
+	fi
 }
 
 stop_shadowsocks()
 {
-supervisorctl reload
-supervisorctl stop all
+	if [ "$DISTRO" == "CentOS" ]; then
+	# CentOS
+	/etc/init.d/supervisord start
+	fi
+	if [[ "$DISTRO" == "Ubuntu" ]] || [[ "$DISTRO" == "Debian" ]]; then
+	# Debian/Ubuntu
+	supervisorctl reload
+	supervisorctl stop all
+	fi
 }
 
 restart_shadowsocks()
 {
-supervisorctl reload
-supervisorctl restart all
+	if [ "$DISTRO" == "CentOS" ]; then
+	# CentOS
+	/etc/init.d/supervisord restart
+	fi
+	if [[ "$DISTRO" == "Ubuntu" ]] || [[ "$DISTRO" == "Debian" ]]; then
+	# Debian/Ubuntu
+	supervisorctl reload
+	supervisorctl restart all
+	fi
 }
 
 showlog__shadowsocks()
 {
-supervisorctl tail -f shadowsocks stderr
+	if [ "$DISTRO" == "CentOS" ]; then
+	# CentOS
+	echo "暂且不支持,欢迎联系飞雪!"
+	fi
+	if [[ "$DISTRO" == "Ubuntu" ]] || [[ "$DISTRO" == "Debian" ]]; then
+	# Debian/Ubuntu
+	supervisorctl tail -f shadowsocks stderr
+	fi
 }
 
 updata__shadowsocks()
