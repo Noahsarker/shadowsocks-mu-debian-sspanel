@@ -36,6 +36,14 @@ showlog__shadowsocks()
 supervisorctl tail -f shadowsocks stderr
 }
 
+updata__shadowsocks()
+{
+echo "Download Shadowsocks Updata Pack And Apply..."
+cd /root/shadowsocks
+git pull
+echo "Updata Completed!"
+}
+
 case "${arg1}" in
     start)
         start_shadowsocks
@@ -48,6 +56,9 @@ case "${arg1}" in
         ;;
     showlog)
         showlog__shadowsocks
+        ;;
+    updata)
+        updata__shadowsocks
         ;;
     *)
         echo "Usage: shadowsocks {start|stop|showlog|restart}"
